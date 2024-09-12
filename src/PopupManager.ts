@@ -35,7 +35,7 @@ export default class PopupManager {
   }
 
   private closePopup() {
-    console.log("Closing popup", this.openPopup, this.currentSuggestionElement);
+    // console.log("Closing popup", this.openPopup, this.currentSuggestionElement);
     if (this.openPopup) {
       this.openPopup.remove();
       this.openPopup = undefined;
