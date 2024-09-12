@@ -9,7 +9,7 @@ import { MatchesEntity } from "./types";
  * @returns Blot class that can be registered on the Quill instance
  */
 export default function createSuggestionBlotForQuillInstance(Quill: any) {
-  const ParentBlot = Quill.import("formats/bold");
+  const ParentBlot = Quill.import('blots/inline');
 
   return class SuggestionBlot extends ParentBlot {
     static blotName = "ltmatch";
@@ -22,7 +22,7 @@ export default function createSuggestionBlotForQuillInstance(Quill: any) {
         node.setAttribute("data-length", match.length.toString());
         node.setAttribute("data-rule-id", match.rule.id);
       }
-      console.log("Created blot", node);
+      // console.log("Created blot", node);
       return node;
     }
 
