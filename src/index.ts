@@ -52,11 +52,19 @@ export class QuillLanguageTool {
     debug("Attaching QuillLanguageTool to Quill instance", quill);
 
     this.quill.on("text-change", (_delta, _oldDelta, source) => {
-      console.log(_delta, _oldDelta, source);
       if (source === "user") {
         this.onTextChange();
       }
     });
+
+    // Add input event listener
+    this.quill.root.addEventListener('input', (event: Event) => {
+      const inputEvent = event as InputEvent;
+      if (inputEvent.inputType === 'insertCompositionText') {
+        this.cancelCooldownBecauseOfComposition();
+      }
+    });
+
     this.checkSpelling();
     this.disableNativeSpellcheckIfSet();
   }
@@ -69,14 +77,23 @@ export class QuillLanguageTool {
 
   private onTextChange() {
     if (this.loopPreventionCooldown) return;
+    this.resetTypingCooldown();
+  }
+
+  private resetTypingCooldown() {
     if (this.typingCooldown) {
       clearTimeout(this.typingCooldown);
     }
     this.typingCooldown = setTimeout(() => {
       debug("User stopped typing, checking spelling");
-
       this.checkSpelling();
     }, this.params.cooldownTime);
+  }
+
+  private cancelCooldownBecauseOfComposition() {
+    if (this.typingCooldown) {
+      clearTimeout(this.typingCooldown);
+    }
   }
 
   public async reloadBoxes() {
