@@ -52,6 +52,7 @@ export class QuillLanguageTool {
     debug("Attaching QuillLanguageTool to Quill instance", quill);
 
     this.quill.on("text-change", (_delta, _oldDelta, source) => {
+      console.log(_delta, _oldDelta, source);
       if (source === "user") {
         this.onTextChange();
       }
